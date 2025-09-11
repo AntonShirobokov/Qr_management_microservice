@@ -1,0 +1,9 @@
+spring:
+  datasource:
+    username: postgres
+    password: postgres
+    url: jdbc:postgresql://localhost:5434/qr_management_db
+  flyway:
+    user: postgres
+    password: postgres
+    url: jdbc:postgresql://localhost:5434/qr_management_db
