@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 @Getter
 public class JwtKeyProperties {
 
-    @Value("$jwt.keys.public.path")
+    @Value("${jwt.keys.public.path}")
     private String publicKeyPath;
 
 }
