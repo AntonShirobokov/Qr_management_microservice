@@ -1,6 +1,7 @@
 package com.shirobokov.qr_management_microservice.entity;
 
 
+import com.shirobokov.qr_management_microservice.entity.enums.QrType;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.ToString;
@@ -18,7 +19,7 @@ public class QrCode {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    @Column(name="qrcode_id")
+    @Column(name="qr_code_id")
     private UUID qrCodeId;
 
     @Column(name="user_id")
@@ -35,11 +36,5 @@ public class QrCode {
     @Column(name="created_at")
     private LocalDateTime createdAt;
 
-
-    public enum QrType {
-        simpleQr,
-        qrWithStatistics,
-        qrList
-    }
 
 }

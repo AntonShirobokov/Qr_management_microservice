@@ -1,7 +1,7 @@
 create type qr_type as enum ('simpleQr', 'qrWithStatistics', 'qrList');
 
 create table qr_codes (
-    qrcode_id UUID primary key,
+    qr_code_id UUID primary key,
     user_id UUID,
     type qr_type,
     target_url TEXT,
@@ -10,7 +10,7 @@ create table qr_codes (
 
 create table list_items (
     list_items_id serial primary key,
-    qrcode_id UUID references qr_codes(qrcode_id) on delete cascade,
+    qr_code_id UUID references qr_codes(qr_code_id) on delete cascade,
     content text,
     created_at timestamp,
     updated_at timestamp
