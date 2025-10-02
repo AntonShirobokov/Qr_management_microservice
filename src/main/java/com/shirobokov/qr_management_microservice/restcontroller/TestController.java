@@ -1,7 +1,9 @@
 package com.shirobokov.qr_management_microservice.restcontroller;
 
 
+import com.shirobokov.qr_management_microservice.dto.QrCodeSaveRequest;
 import com.shirobokov.qr_management_microservice.entity.QrCode;
+import com.shirobokov.qr_management_microservice.entity.QrCodeData;
 import com.shirobokov.qr_management_microservice.rabbit.producer.QrCodeProducer;
 import com.shirobokov.qr_management_microservice.service.QrCodeService;
 import lombok.RequiredArgsConstructor;
@@ -43,9 +45,11 @@ public class TestController {
 
         qrCodeService.save(qrCode);
 
-        qrCodeProducer.send(qrCode);
+        //qrCodeProducer.send(qrCode);
 
         return ResponseEntity.ok().build();
     }
+
+
 
 }

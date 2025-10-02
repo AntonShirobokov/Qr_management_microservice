@@ -4,14 +4,13 @@ create table qr_codes (
     qr_code_id UUID primary key,
     user_id UUID,
     type qr_type,
+    qr_url TEXT,
     target_url TEXT,
     created_at timestamp
 );
 
-create table list_items (
-    list_items_id serial primary key,
-    qr_code_id UUID references qr_codes(qr_code_id) on delete cascade,
-    content text,
-    created_at timestamp,
-    updated_at timestamp
+CREATE TABLE qr_code_data (
+    qr_code_data_id SERIAL PRIMARY KEY,
+    qr_code_id UUID UNIQUE REFERENCES qr_codes(qr_code_id) ON DELETE CASCADE,
+    content JSONB
 );

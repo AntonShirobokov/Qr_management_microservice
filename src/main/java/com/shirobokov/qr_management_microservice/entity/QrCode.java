@@ -18,7 +18,6 @@ import java.util.UUID;
 public class QrCode {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name="qr_code_id")
     private UUID qrCodeId;
 
@@ -30,11 +29,16 @@ public class QrCode {
     @Column(name="type")
     private QrType type;
 
+    @Column(name="qr_url")
+    private String qrUrl;
+
     @Column(name="target_url")
     private String targetUrl;
 
     @Column(name="created_at")
     private LocalDateTime createdAt;
 
+    @OneToOne(mappedBy = "qrCode", cascade = CascadeType.ALL)
+    private QrCodeData qrCodeData;
 
 }
