@@ -53,8 +53,9 @@ public class QrController {
         }
 
         qrCodeService.save(qrCode);
-
-        qrCodeProducer.send(qrCode);
+        if (!qrCode.getType().equals(QrType.simpleQr)){
+            qrCodeProducer.send(qrCode);
+        }
 
         return ResponseEntity.ok("QrCode успешно получен на микросервисе Qr_management");
     }
