@@ -1,5 +1,7 @@
 package com.shirobokov.qr_management_microservice.mapper;
 
+import com.shirobokov.qr_management_microservice.dto.QrCodeDTO;
+import com.shirobokov.qr_management_microservice.dto.QrCodeDataDTO;
 import com.shirobokov.qr_management_microservice.dto.QrCodeMessage;
 import com.shirobokov.qr_management_microservice.dto.QrCodeSaveRequest;
 import com.shirobokov.qr_management_microservice.entity.QrCode;
@@ -19,4 +21,8 @@ public interface QrCodeMapper {
     QrCode toQrCodeFromQrCodeSaveRequest (QrCodeSaveRequest qrCodeSaveRequest);
 
     QrCodeData toQrCodeDataFromQrCodeSaveRequest (QrCodeSaveRequest qrCodeSaveRequest);
+
+    QrCodeDataDTO toQrCodeDataDTOFromQrCodeData(QrCodeData qrCodeData);
+
+    QrCodeDTO toQrCodeDTOFromQrCode(QrCode qrCode);
 }

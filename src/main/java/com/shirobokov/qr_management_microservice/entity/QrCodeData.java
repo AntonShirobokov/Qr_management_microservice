@@ -3,6 +3,7 @@ package com.shirobokov.qr_management_microservice.entity;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.ToString;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
 
@@ -25,5 +26,6 @@ public class QrCodeData {
 
     @OneToOne
     @JoinColumn(name="qr_code_id", referencedColumnName = "qr_code_id")
+    @ToString.Exclude
     private QrCode qrCode;
 }

@@ -1,26 +1,28 @@
 package com.shirobokov.qr_management_microservice.dto;
 
-import com.shirobokov.qr_management_microservice.entity.Item;
+
+import com.shirobokov.qr_management_microservice.entity.QrCodeData;
 import com.shirobokov.qr_management_microservice.entity.enums.QrType;
 import lombok.Data;
 
-import java.util.List;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Data
-public class QrCodeSaveRequest {
+public class QrCodeDTO {
 
     private UUID qrCodeId;
 
     private String title;
 
-    private UUID userId;
-
-    private String targetUrl;
+    private QrType type;
 
     private String qrUrl;
 
-    private QrType type;
+    private String targetUrl;
 
-    private List<Item> content;
+    private LocalDateTime createdAt;
+
+    private QrCodeDataDTO qrCodeData;
+
 }

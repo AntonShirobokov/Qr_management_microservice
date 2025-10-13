@@ -24,6 +24,9 @@ public class QrCode {
     @Column(name="user_id")
     private UUID userId;
 
+    @Column(name="title")
+    private String title;
+
     @Enumerated(EnumType.STRING)
     @JdbcType(PostgreSQLEnumJdbcType.class)
     @Column(name="type")

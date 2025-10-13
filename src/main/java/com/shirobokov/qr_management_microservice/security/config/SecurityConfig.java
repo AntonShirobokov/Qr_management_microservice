@@ -27,6 +27,7 @@ public class SecurityConfig {
 
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/private").hasRole("USER")
+                        .requestMatchers("/api/saveQr").hasRole("USER")
                         .anyRequest().permitAll()
                 );
         http.addFilterAfter(jwtAuthenticationFilter, SecurityContextHolderFilter.class);
