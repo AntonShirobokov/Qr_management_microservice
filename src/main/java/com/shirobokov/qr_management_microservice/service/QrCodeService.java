@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -24,7 +25,16 @@ public class QrCodeService {
         qrCodeRepository.save(qrCode);
     }
 
-    public List<QrCode> findAllQrCodesByUserId(UUID user_id) {
-        return qrCodeRepository.findAllByUserId(user_id);
+    public List<QrCode> findAllQrCodesByUserId(UUID userId) {
+        return qrCodeRepository.findAllByUserId(userId);
+    }
+
+    public boolean deleteQrCode(UUID qrCodeId) {
+        Optional<QrCode> qrCode = qrCodeRepository.findById(qrCodeId);
+        if (qrCode.isPresent()) {
+            qrCodeRepository.delete(qrCode.get());
+            return true;
+        }
+        return false;
     }
 }

@@ -12,12 +12,15 @@ import com.shirobokov.qr_management_microservice.service.QrCodeService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.coyote.Response;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -63,16 +66,29 @@ public class QrController {
     @GetMapping("/getAllQrCodes")
     public ResponseEntity<?> getAllQrCodes() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        UUID user_id = (UUID) authentication.getPrincipal();
-        log.info("Полученный uuid: {}", user_id.toString());
+        UUID userId = (UUID) authentication.getPrincipal();
+        log.info("Полученный uuid: {}", userId.toString());
 
 
-        List<QrCode> qrList = qrCodeService.findAllQrCodesByUserId(user_id);
+        List<QrCode> qrList = qrCodeService.findAllQrCodesByUserId(userId);
 
         log.info("Полученные значения qrCode для пользователя из БД: {}", qrList);
 
         List<QrCodeDTO> qrListTest = qrList.stream().map(qrCodeMapper::toQrCodeDTOFromQrCode).toList();
 
         return ResponseEntity.ok(qrListTest);
+    }
+
+    @DeleteMapping("/deleteQrCode")
+    public ResponseEntity<?> deleteQrCode(@RequestBody Map<String, UUID> payload) {
+        UUID qrCodeId = payload.get("qrCodeId");
+
+        log.info("Получен id qr кода: {}", qrCodeId);
+
+        if (qrCodeService.deleteQrCode(qrCodeId)) {
+            return ResponseEntity.noContent().build();
+        }
+
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("error", "Qr код не найден"));
     }
 }

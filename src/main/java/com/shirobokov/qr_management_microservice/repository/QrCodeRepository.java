@@ -12,5 +12,5 @@ import java.util.UUID;
 public interface QrCodeRepository extends JpaRepository<QrCode, UUID> {
 
 
-    List<QrCode> findAllByUserId(UUID user_id);
+    List<QrCode> findAllByUserId(UUID userId);
 }

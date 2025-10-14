@@ -28,6 +28,8 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/private").hasRole("USER")
                         .requestMatchers("/api/saveQr").hasRole("USER")
+                        .requestMatchers("/api/getAllQrCodes").hasRole("USER")
+                        .requestMatchers("/api/deleteQrCode").hasRole("USER")
                         .anyRequest().permitAll()
                 );
         http.addFilterAfter(jwtAuthenticationFilter, SecurityContextHolderFilter.class);
