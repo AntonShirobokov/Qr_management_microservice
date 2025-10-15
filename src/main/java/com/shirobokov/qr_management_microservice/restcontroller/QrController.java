@@ -1,7 +1,6 @@
 package com.shirobokov.qr_management_microservice.restcontroller;
 
 import com.shirobokov.qr_management_microservice.dto.QrCodeDTO;
-import com.shirobokov.qr_management_microservice.dto.QrCodeDataDTO;
 import com.shirobokov.qr_management_microservice.dto.QrCodeSaveRequest;
 import com.shirobokov.qr_management_microservice.entity.QrCode;
 import com.shirobokov.qr_management_microservice.entity.QrCodeData;
@@ -11,18 +10,15 @@ import com.shirobokov.qr_management_microservice.rabbit.producer.QrCodeProducer;
 import com.shirobokov.qr_management_microservice.service.QrCodeService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.coyote.Response;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api")
@@ -80,12 +76,16 @@ public class QrController {
     }
 
     @DeleteMapping("/deleteQrCode")
-    public ResponseEntity<?> deleteQrCode(@RequestBody Map<String, UUID> payload) {
-        UUID qrCodeId = payload.get("qrCodeId");
+    public ResponseEntity<?> deleteQrCode(@RequestBody Map<String, String> payload) {
+        UUID qrCodeId = UUID.fromString(payload.get("qrCodeId"));
+        QrType type = QrType.valueOf(payload.get("type"));
 
-        log.info("Получен id qr кода: {}", qrCodeId);
+        log.info("Получен id qr кода: {}, с типом: {}", qrCodeId, type);
 
         if (qrCodeService.deleteQrCode(qrCodeId)) {
+            if (!type.equals(QrType.simpleQr)) {
+                qrCodeProducer.delete(qrCodeId);
+            }
             return ResponseEntity.noContent().build();
         }
 

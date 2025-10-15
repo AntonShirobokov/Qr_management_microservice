@@ -12,26 +12,33 @@ import org.springframework.amqp.support.converter.DefaultClassMapper;
 import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
 import org.springframework.stereotype.Component;
 
+import java.util.Map;
+import java.util.UUID;
+
 @Component
 @RequiredArgsConstructor
 @Slf4j
 public class QrCodeProducer {
 
-    public static final String EXCHANGE_NAME = "redirect_exchange";
-    public static final String QUEUE_NAME = "redirect_queue";
-    public static final String ROUTING_KEY = "qr.redirect";
+    public static final String FANOUT_EXCHANGE_NAME_REDIRECT = "redirect_exchange";
+    public static final String FANOUT_EXCHANGE_NAME_DELETE = "delete_exchange";
+
 
     private final QrCodeMapper qrCodeMapper;
-    private final AmqpAdmin amqpAdmin;
     private final RabbitTemplate rabbitTemplate;
 
     public void send(QrCode qrCode) {
         QrCodeMessage qrCodeMessage = qrCodeMapper.toQrCodeMessage(qrCode);
 
-        rabbitTemplate.convertAndSend(EXCHANGE_NAME, ROUTING_KEY, qrCodeMessage);
+        rabbitTemplate.convertAndSend(FANOUT_EXCHANGE_NAME_REDIRECT, "", qrCodeMessage);
 
         log.info("Сообщение отправлено в очередь: {}", qrCodeMessage);
     }
 
+    public void delete(UUID qrCodeId) {
+        rabbitTemplate.convertAndSend(FANOUT_EXCHANGE_NAME_DELETE,"", Map.of("qrCodeId", qrCodeId));
+
+        log.info("Qr код отправлен в очередь для удаления: {}", qrCodeId);
+    }
 
 }
