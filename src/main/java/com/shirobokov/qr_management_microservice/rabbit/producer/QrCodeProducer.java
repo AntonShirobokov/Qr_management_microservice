@@ -22,6 +22,7 @@ public class QrCodeProducer {
 
     public static final String FANOUT_EXCHANGE_NAME_REDIRECT = "redirect_exchange";
     public static final String FANOUT_EXCHANGE_NAME_DELETE = "delete_exchange";
+    public static final String FANOUT_EXCHANGE_NAME_UPDATE = "update_exchange";
 
 
     private final QrCodeMapper qrCodeMapper;
@@ -39,6 +40,11 @@ public class QrCodeProducer {
         rabbitTemplate.convertAndSend(FANOUT_EXCHANGE_NAME_DELETE,"", Map.of("qrCodeId", qrCodeId));
 
         log.info("Qr код отправлен в очередь для удаления: {}", qrCodeId);
+    }
+
+    public void update(UUID qrCodeId, String targetUrl) {
+        rabbitTemplate.convertAndSend(FANOUT_EXCHANGE_NAME_UPDATE, "", Map.of("qrCodeId", qrCodeId, "targetUrl", targetUrl ));
+        log.info("Новые данные отправлен в очередь для обновления в redirect microservice: {}, {}", qrCodeId, targetUrl);
     }
 
 }

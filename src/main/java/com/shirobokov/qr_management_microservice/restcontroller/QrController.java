@@ -124,6 +124,7 @@ public class QrController {
 
         if (qrCodeService.checkQrCodeOwner(qrCodeStatisticsUpdateDTO.getQrCodeId(), userId)) {
             qrCodeService.updateQrWithStatistics(qrCodeStatisticsUpdateDTO);
+            qrCodeProducer.update(qrCodeStatisticsUpdateDTO.getQrCodeId(), qrCodeStatisticsUpdateDTO.getTargetUrl());
             return ResponseEntity.noContent().build();
         }
 
