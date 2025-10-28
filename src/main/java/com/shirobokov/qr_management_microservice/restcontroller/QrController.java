@@ -2,12 +2,16 @@ package com.shirobokov.qr_management_microservice.restcontroller;
 
 import com.shirobokov.qr_management_microservice.dto.QrCodeDTO;
 import com.shirobokov.qr_management_microservice.dto.QrCodeSaveRequest;
+import com.shirobokov.qr_management_microservice.dto.QrCodeListUpdateDTO;
+import com.shirobokov.qr_management_microservice.dto.QrCodeStatisticsUpdateDTO;
 import com.shirobokov.qr_management_microservice.entity.QrCode;
 import com.shirobokov.qr_management_microservice.entity.QrCodeData;
 import com.shirobokov.qr_management_microservice.entity.enums.QrType;
 import com.shirobokov.qr_management_microservice.mapper.QrCodeMapper;
 import com.shirobokov.qr_management_microservice.rabbit.producer.QrCodeProducer;
+import com.shirobokov.qr_management_microservice.service.QrCodeDataService;
 import com.shirobokov.qr_management_microservice.service.QrCodeService;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -29,6 +33,8 @@ public class QrController {
     private final QrCodeMapper qrCodeMapper;
 
     private final QrCodeService qrCodeService;
+
+    private final QrCodeDataService qrCodeDataService;
 
     private final QrCodeProducer qrCodeProducer;
 
@@ -60,7 +66,8 @@ public class QrController {
     }
 
     @GetMapping("/getAllQrCodes")
-    public ResponseEntity<?> getAllQrCodes() {
+    public ResponseEntity<?> getAllQrCodes(HttpServletRequest httpServletRequest) {
+
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         UUID userId = (UUID) authentication.getPrincipal();
         log.info("Полученный uuid: {}", userId.toString());
@@ -91,4 +98,36 @@ public class QrController {
 
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("error", "Qr код не найден"));
     }
+
+    @PutMapping("/updateQrList")
+    public ResponseEntity<?> updateQrList(@RequestBody QrCodeListUpdateDTO qrCodeListUpdateDTO) {
+
+        log.info("{} Новые данные qrList: {}", this.getClass().getName(), qrCodeListUpdateDTO);
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        UUID userId = (UUID) authentication.getPrincipal();
+
+        if (qrCodeService.checkQrCodeOwner(qrCodeListUpdateDTO.getQrCodeId(), userId)) {
+            qrCodeDataService.updateQrCode(qrCodeListUpdateDTO);
+            return ResponseEntity.noContent().build();
+        }
+
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(Map.of("error", "Вы не можете редактировать этот qr код"));
+    }
+
+    @PutMapping("/updateQrWithStatistics")
+    public ResponseEntity<?> updateQrWithStatistics(@RequestBody QrCodeStatisticsUpdateDTO qrCodeStatisticsUpdateDTO) {
+        log.info("{} Новые данные qrWithStatistics: {}", this.getClass().getName(), qrCodeStatisticsUpdateDTO);
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        UUID userId = (UUID) authentication.getPrincipal();
+
+        if (qrCodeService.checkQrCodeOwner(qrCodeStatisticsUpdateDTO.getQrCodeId(), userId)) {
+            qrCodeService.updateQrWithStatistics(qrCodeStatisticsUpdateDTO);
+            return ResponseEntity.noContent().build();
+        }
+
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(Map.of("error", "Вы не можете редактировать этот qr код"));
+    }
+
 }

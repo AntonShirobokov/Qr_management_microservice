@@ -17,5 +17,10 @@ public class QrCodeExceptionHandler {
                 .status(HttpStatus.CONFLICT)
                 .body(new ErrorResponse(HttpStatus.CONFLICT.value(), exception.getMessage(), LocalDateTime.now()));
     }
-
+    @ExceptionHandler(QrCodeNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleQrCodeNotFoundException(QrCodeNotFoundException exception) {
+        return ResponseEntity
+                .status(HttpStatus.NOT_FOUND)
+                .body(new ErrorResponse(HttpStatus.NOT_FOUND.value(), exception.getMessage(), LocalDateTime.now()));
+    }
 }
