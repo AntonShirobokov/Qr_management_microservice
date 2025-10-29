@@ -30,6 +30,8 @@ public class SecurityConfig {
                         .requestMatchers("/api/saveQr").hasRole("USER")
                         .requestMatchers("/api/getAllQrCodes").hasRole("USER")
                         .requestMatchers("/api/deleteQrCode").hasRole("USER")
+                        .requestMatchers("/api/updateQrList").hasRole("USER")
+                        .requestMatchers("/api/updateQrWithStatistics").hasRole("USER")
                         .anyRequest().permitAll()
                 );
         http.addFilterAfter(jwtAuthenticationFilter, SecurityContextHolderFilter.class);

@@ -1,9 +1,6 @@
 package com.shirobokov.qr_management_microservice.restcontroller;
 
-import com.shirobokov.qr_management_microservice.dto.QrCodeDTO;
-import com.shirobokov.qr_management_microservice.dto.QrCodeSaveRequest;
-import com.shirobokov.qr_management_microservice.dto.QrCodeListUpdateDTO;
-import com.shirobokov.qr_management_microservice.dto.QrCodeStatisticsUpdateDTO;
+import com.shirobokov.qr_management_microservice.dto.*;
 import com.shirobokov.qr_management_microservice.entity.QrCode;
 import com.shirobokov.qr_management_microservice.entity.QrCodeData;
 import com.shirobokov.qr_management_microservice.entity.enums.QrType;
@@ -37,12 +34,6 @@ public class QrController {
     private final QrCodeDataService qrCodeDataService;
 
     private final QrCodeProducer qrCodeProducer;
-
-    @GetMapping("/private")
-    public ResponseEntity<?> privateEndpoint(){
-        return ResponseEntity.ok("Private endpoint");
-    }
-
 
     @PostMapping("/saveQr")
     public ResponseEntity<?> saveQr(@RequestBody QrCodeSaveRequest qrCodeSaveRequest) {
@@ -131,4 +122,17 @@ public class QrController {
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body(Map.of("error", "Вы не можете редактировать этот qr код"));
     }
 
+    @GetMapping("/getQrCodeInfo/{qrCodeId}")
+    public ResponseEntity<?> getQrCodeInfo(@PathVariable UUID qrCodeId) {
+
+        QrCode qrCode = qrCodeService.findQrCodeByQrCodeId(qrCodeId);
+
+        if (!qrCode.getType().equals(QrType.qrList)) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("error", "QrCode не типа qrList"));
+        }
+
+        QrCodeListDTO qrCodeListDTO = qrCodeMapper.toQrCodeListDTOFromQrCode(qrCode);
+
+        return ResponseEntity.ok(qrCodeListDTO);
+    }
 }

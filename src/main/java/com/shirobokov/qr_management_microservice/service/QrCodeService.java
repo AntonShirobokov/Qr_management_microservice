@@ -68,4 +68,12 @@ public class QrCodeService {
 
         log.info("{} Qr код со статистикой обновлен его новые данные: {}", this.getClass().getName(), qrCode);
     }
+
+    public QrCode findQrCodeByQrCodeId(UUID qrCodeId) {
+        Optional<QrCode> qrCodeOptional = qrCodeRepository.findById(qrCodeId);
+        if (qrCodeOptional.isEmpty()) {
+            throw new QrCodeNotFoundException("Qr кода с таким id не существует");
+        }
+        return qrCodeOptional.get();
+    }
 }
