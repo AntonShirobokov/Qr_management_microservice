@@ -1,0 +1,23 @@
+spring:
+  datasource:
+    username: postgres
+    password: postgres
+    url: jdbc:postgresql://localhost:5434/qr_management_db
+  flyway:
+    user: postgres
+    password: postgres
+    url: jdbc:postgresql://localhost:5434/qr_management_db
+
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: user
+    password: password
+
+jwt:
+  keys:
+    public:
+      path: keys/publicSortlyQR.pem
+
+server:
+  port: 8082
